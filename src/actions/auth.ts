@@ -20,7 +20,7 @@ export async function signInWithGoogle() {
   }
 
   if (data?.url) {
-    redirect(data.url); // ✅ This works - ignore NEXT_REDIRECT log
+    redirect(data.url);
   } else {
     console.error("No OAuth URL returned");
     redirect("/");
@@ -30,5 +30,5 @@ export async function signInWithGoogle() {
 export async function signOut() {
   const supabase = await createSupabaseServerClient();
   await supabase.auth.signOut();
-  redirect("/"); // ✅ This also works
+  redirect("/");
 }

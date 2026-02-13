@@ -37,13 +37,13 @@ export async function createSupabaseServerClient() {
 }
 
 // ✅ Client client (async wrapper - satisfies "use server")
-export async function createSupabaseBrowserClient() {
-  if (typeof window === "undefined") {
-    throw new Error("createBrowserClient must be called from client");
-  }
-  // Return sync browser client inside async function
-  return createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-  );
-}
+// export function createSupabaseBrowserClient() {
+//   if (typeof window === "undefined") {
+//     throw new Error("createBrowserClient must be called from client");
+//   }
+//   // Return sync browser client inside async function
+//   return createBrowserClient(
+//     process.env.NEXT_PUBLIC_SUPABASE_URL!,
+//     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+//   );
+// }
