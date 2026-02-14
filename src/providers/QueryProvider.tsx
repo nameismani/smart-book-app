@@ -6,7 +6,12 @@ export function QueryProvider({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
-        defaultOptions: { queries: { refetchOnWindowFocus: true } },
+        defaultOptions: {
+          queries: {
+            // staleTime: 1000 * 60 * 5,
+            refetchOnWindowFocus: true,
+          },
+        },
       }),
   );
   return (

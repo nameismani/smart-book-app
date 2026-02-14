@@ -39,11 +39,7 @@ const Dashboard = async () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       <DashboardHeader user={user} />
-      <ClientDashboardContent
-        initialBookmarks={bookmarks}
-        userId={user?.id || ""}
-        user={user}
-      />
+      <ClientDashboardContent userId={user?.id || ""} user={user} />
     </div>
   );
 };
