@@ -17,25 +17,32 @@ type Bookmark = Database["public"]["Tables"]["bookmarks"]["Row"];
 // ================================
 // GET BOOKMARKS (Main Query)
 // ================================
-export const useGetBookmarks = (userId: string) => {
+export const useGetBookmarks = (userId: string, search: string = "") => {
   const supabase = createBrowserSupabaseClient();
 
   return useQuery({
-    queryKey: ["bookmarks", userId],
+    queryKey: ["bookmarks", userId, search],
     queryFn: async () => {
       if (!userId) return [];
 
-      const { data, error } = await supabase
+      let query = supabase
         .from("bookmarks")
         .select("*")
         .eq("user_id", userId)
         .order("created_at", { ascending: false });
 
+      // 🔍 SEARCH by title or URL
+      if (search.trim()) {
+        const searchQuery = `%${search.trim()}%`;
+        query = query.or(`title.ilike.${searchQuery},url.ilike.${searchQuery}`);
+      }
+
+      const { data, error } = await query;
+
       if (error) throw error;
       return data || [];
     },
     enabled: !!userId,
-    // staleTime: 5 * 60 * 1000, // 5 minutes
     meta: {
       errorTitle: "Error fetching bookmarks",
     },

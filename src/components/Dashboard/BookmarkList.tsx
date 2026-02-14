@@ -6,7 +6,7 @@ import { useGetBookmarks, useDeleteBookmark } from "@/hooks/useBookmarkApi";
 import Link from "next/link";
 import { EditIcon, ExternalLink, Trash2 } from "lucide-react";
 import EmptyBookmarkIcon from "@/assets/EmptyBookmarkIcon";
-import { EmptyBookmark } from "./BookMarkAddon";
+import { BookMarkSkeleton, EmptyBookmark } from "./BookMarkAddon";
 import { useRef } from "react";
 import ConfirmationModal, {
   ConfirmationModalRef,
@@ -15,10 +15,11 @@ import { tBookMark } from "@/types/bookmark.type";
 
 type Props = {
   userId: string;
+  search: string;
 };
 
-const BookmarkList = ({ userId }: Props) => {
-  const { data: bookmarks = [], isLoading } = useGetBookmarks(userId);
+const BookmarkList = ({ userId, search }: Props) => {
+  const { data: bookmarks = [], isLoading } = useGetBookmarks(userId, search);
   const { mutateAsync: deleteBookmark, isPending: isDeleting } =
     useDeleteBookmark(userId);
 
@@ -34,9 +35,9 @@ const BookmarkList = ({ userId }: Props) => {
     });
   };
 
-  // if (isLoading && bookmarks.length === 0) {
-  //   return <p className="text-center py-20">Loading bookmarks...</p>;
-  // }
+  if (isLoading && bookmarks.length === 0) {
+    return <BookMarkSkeleton />;
+  }
 
   if (bookmarks.length === 0) {
     return <EmptyBookmark />;
