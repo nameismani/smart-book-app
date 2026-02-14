@@ -17,10 +17,11 @@ const BookmarkList = ({ initialBookmarks, userId }: Props) => {
   const supabase = createBrowserSupabaseClient();
   const [bookmarks, setBookmarks] = useState<Bookmark[]>(initialBookmarks);
   const [loading, setLoading] = useState(false);
-
   useEffect(() => {
+    if (!userId) return;
+
     const channel = supabase
-      .channel("bookmarks")
+      .channel("realtime:bookmarks")
       .on(
         "postgres_changes",
         {
@@ -30,30 +31,39 @@ const BookmarkList = ({ initialBookmarks, userId }: Props) => {
           filter: `user_id=eq.${userId}`,
         },
         (payload) => {
+          console.log("Realtime event:", payload);
+
           setBookmarks((current) => {
-            if (payload.eventType === "INSERT") {
-              return [payload.new as Bookmark, ...current];
+            switch (payload.eventType) {
+              case "INSERT":
+                return [payload.new as Bookmark, ...current];
+
+              case "DELETE":
+                return current.filter(
+                  (b) => b.id !== (payload.old as Bookmark).id,
+                );
+
+              case "UPDATE":
+                return current.map((b) =>
+                  b.id === (payload.new as Bookmark).id
+                    ? (payload.new as Bookmark)
+                    : b,
+                );
+
+              default:
+                return current;
             }
-            if (payload.eventType === "DELETE") {
-              return current.filter((b) => b.id !== (payload.old as any).id);
-            }
-            if (payload.eventType === "UPDATE") {
-              return current.map((b) =>
-                b.id === (payload.new as any).id
-                  ? (payload.new as Bookmark)
-                  : b,
-              );
-            }
-            return current;
           });
         },
       )
-      .subscribe();
+      .subscribe((status) => {
+        console.log("Subscription status:", status);
+      });
 
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [supabase, userId]);
+  }, [userId]);
 
   const deleteBookmark = async (id: string) => {
     if (loading) return;
@@ -143,7 +153,9 @@ const BookmarkList = ({ initialBookmarks, userId }: Props) => {
                   d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                 />
               </svg>
-              <span className="truncate">{new URL(bookmark.url).hostname}</span>
+              <span className="truncate line max-w-75">
+                {new URL(bookmark.url).hostname}
+              </span>
             </a>
 
             <div className="flex items-center justify-between pt-4 border-t border-slate-100">

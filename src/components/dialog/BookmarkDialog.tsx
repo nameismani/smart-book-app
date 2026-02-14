@@ -85,7 +85,7 @@ const BookmarkDialog = ({ children, bookmark, mode }: Props) => {
 
       reset();
       setIsOpen(false);
-      router.refresh();
+      // router.refresh();
     } catch (error: any) {
       console.error("Operation failed:", error);
     } finally {
