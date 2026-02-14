@@ -1,6 +1,7 @@
 "use client";
 
 import { signOut } from "@/actions/auth";
+import { useAuthUser } from "@/hooks/useBookmarkApi";
 import { MotionButton, MotionDiv, MotionHeader } from "@/motion/framer_motion";
 import { User } from "@supabase/supabase-js";
 import { useTransition } from "react";
@@ -9,7 +10,8 @@ type Props = {
   user: User | null;
 };
 
-const DashboardHeader = ({ user }: Props) => {
+const DashboardHeader = () => {
+  const { data: user } = useAuthUser();
   const [isPending, startTransition] = useTransition();
 
   const handleSignOut = () => {
@@ -17,6 +19,8 @@ const DashboardHeader = ({ user }: Props) => {
       await signOut();
     });
   };
+
+  if (!user) return null;
 
   return (
     <MotionHeader

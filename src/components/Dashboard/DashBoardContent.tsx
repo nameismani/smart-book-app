@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 import { MotionDiv } from "@/motion/framer_motion";
 import BookmarkList from "./BookmarkList";
 import BookmarkDialog from "../dialog/BookmarkDialog";
-import { useGetBookmarks } from "@/hooks/useBookmarkApi";
+import { useBookmarkRealtime, useGetBookmarks } from "@/hooks/useBookmarkApi";
 import { debounce } from "@tanstack/react-pacer";
 import { Plus, Search, X } from "lucide-react";
 
@@ -17,11 +17,13 @@ type Props = {
 export const ClientDashboardContent = ({ userId, user }: Props) => {
   const [search, setSearch] = useState<string>("");
 
+  useBookmarkRealtime(userId);
+
   const { data: bookmarks = [], isLoading } = useGetBookmarks(userId, search);
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value);
-  };
+  // const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setSearch(e.target.value);
+  // };
 
   const handleClearSearch = () => {
     setSearch("");
@@ -95,7 +97,7 @@ export const ClientDashboardContent = ({ userId, user }: Props) => {
             animate={{ opacity: 1, x: 0 }}
           >
             <BookmarkDialog mode="create" userId={userId}>
-              <button className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2 active:scale-[0.98]">
+              <button className="px-6 py-3 cursor-pointer bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2 active:scale-[0.98]">
                 <Plus size={16} />
                 Add Bookmark
               </button>

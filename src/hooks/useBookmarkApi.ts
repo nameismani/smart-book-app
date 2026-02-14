@@ -1,16 +1,10 @@
-// hooks/bookmark.ts
 "use client";
 
-import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-  useInfiniteQuery,
-} from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { createBrowserSupabaseClient } from "@/lib/supabase-client";
 import { toast } from "sonner";
 import { Database } from "@/types/database";
-import { tBookMark } from "@/types/bookmark.type";
+import { useEffect } from "react";
 
 type Bookmark = Database["public"]["Tables"]["bookmarks"]["Row"];
 
@@ -19,6 +13,7 @@ type Bookmark = Database["public"]["Tables"]["bookmarks"]["Row"];
 // ================================
 export const useGetBookmarks = (userId: string, search: string = "") => {
   const supabase = createBrowserSupabaseClient();
+  // const queryClient = useQueryClient();
 
   return useQuery({
     queryKey: ["bookmarks", userId, search],
@@ -31,22 +26,56 @@ export const useGetBookmarks = (userId: string, search: string = "") => {
         .eq("user_id", userId)
         .order("created_at", { ascending: false });
 
-      // 🔍 SEARCH by title or URL
       if (search.trim()) {
         const searchQuery = `%${search.trim()}%`;
         query = query.or(`title.ilike.${searchQuery},url.ilike.${searchQuery}`);
       }
 
       const { data, error } = await query;
-
       if (error) throw error;
       return data || [];
     },
     enabled: !!userId,
-    meta: {
-      errorTitle: "Error fetching bookmarks",
-    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    meta: { errorTitle: "Error fetching bookmarks" },
   });
+};
+
+// Realtime subscription hook (separate)
+export const useBookmarkRealtime = (userId: string) => {
+  const queryClient = useQueryClient();
+  const supabase = createBrowserSupabaseClient();
+
+  useEffect(() => {
+    if (!userId) return;
+    // Subscribe to ALL changes on user's bookmarks
+    const channel = supabase
+      .channel(`bookmarks-realtime-${userId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*", // INSERT, UPDATE, DELETE
+          schema: "public",
+          table: "bookmarks",
+          filter: `user_id=eq.${userId}`,
+        },
+        () => {
+          // Just invalidate - React Query handles the rest
+          // console.log("Live trigger");
+          queryClient.invalidateQueries({
+            queryKey: ["bookmarks", userId],
+            exact: false,
+          });
+        },
+      )
+      .subscribe((status) => {
+        console.log("Realtime status:", status);
+      });
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [userId, queryClient]);
 };
 
 // ================================
@@ -73,7 +102,10 @@ export const useCreateBookmark = (userId: string) => {
     onSuccess: () => {
       toast.success("Bookmark created successfully!");
       // Invalidate ALL bookmark queries for this user
-      queryClient.invalidateQueries({ queryKey: ["bookmarks", userId] });
+      queryClient.invalidateQueries({
+        queryKey: ["bookmarks", userId],
+        exact: false,
+      });
     },
     onError: (error: any) => {
       toast.error(error.message || "Failed to create bookmark");
@@ -109,7 +141,10 @@ export const useUpdateBookmark = (userId: string) => {
     },
     onSuccess: () => {
       toast.success("Bookmark updated successfully!");
-      queryClient.invalidateQueries({ queryKey: ["bookmarks", userId] });
+      queryClient.invalidateQueries({
+        queryKey: ["bookmarks", userId],
+        exact: false,
+      });
     },
     onError: (error: any) => {
       toast.error(error.message || "Failed to update bookmark");
@@ -137,10 +172,26 @@ export const useDeleteBookmark = (userId: string) => {
     },
     onSuccess: () => {
       toast.success("Bookmark deleted successfully!");
-      queryClient.invalidateQueries({ queryKey: ["bookmarks", userId] });
+      queryClient.invalidateQueries({
+        queryKey: ["bookmarks", userId],
+        exact: false,
+      });
     },
     onError: (error: any) => {
       toast.error(error.message || "Failed to delete bookmark");
     },
+  });
+};
+
+export const useAuthUser = () => {
+  const supabase = createBrowserSupabaseClient();
+
+  return useQuery({
+    queryKey: ["auth-user"],
+    queryFn: async () => {
+      const { data } = await supabase.auth.getUser();
+      return data.user;
+    },
+    staleTime: 5 * 60 * 1000,
   });
 };

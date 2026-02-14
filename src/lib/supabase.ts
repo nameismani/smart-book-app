@@ -2,7 +2,6 @@
 
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
-import { createBrowserClient } from "@supabase/ssr";
 import type { CookieOptions } from "@supabase/ssr";
 
 // ✅ Server client (async)

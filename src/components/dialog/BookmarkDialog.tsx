@@ -1,4 +1,3 @@
-// components/dialog/BookmarkDialog.tsx
 "use client";
 
 import { useState } from "react";

@@ -5,7 +5,6 @@ import BookmarkDialog from "../dialog/BookmarkDialog";
 import { useGetBookmarks, useDeleteBookmark } from "@/hooks/useBookmarkApi";
 import Link from "next/link";
 import { EditIcon, ExternalLink, Trash2 } from "lucide-react";
-import EmptyBookmarkIcon from "@/assets/EmptyBookmarkIcon";
 import { BookMarkSkeleton, EmptyBookmark } from "./BookMarkAddon";
 import { useRef } from "react";
 import ConfirmationModal, {

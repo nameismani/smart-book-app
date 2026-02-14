@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 const Dashboard = async () => {
   let user: User | null = null;
-  let bookmarks: any[] = [];
+  // let bookmarks: any[] = [];
 
   // Get authenticated user
   try {
@@ -21,26 +21,28 @@ const Dashboard = async () => {
   }
 
   // Fetch user's bookmarks
-  if (user) {
-    try {
-      const supabase = await createSupabaseServerClient();
-      const { data, error } = await supabase
-        .from("bookmarks")
-        .select("*")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false });
+  // if (user) {
+  //   try {
+  //     const supabase = await createSupabaseServerClient();
+  //     const { data, error } = await supabase
+  //       .from("bookmarks")
+  //       .select("*")
+  //       .eq("user_id", user.id)
+  //       .order("created_at", { ascending: false });
 
-      if (!error) {
-        bookmarks = data || [];
-      }
-    } catch (error) {
-      console.error("Fetch bookmarks error:", error);
-    }
-  }
+  //     if (!error) {
+  //       bookmarks = data || [];
+  //     }
+  //   } catch (error) {
+  //     console.error("Fetch bookmarks error:", error);
+  //   }
+  // }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      <DashboardHeader user={user} />
+      <DashboardHeader
+      // user={user}
+      />
       <ClientDashboardContent userId={user?.id || ""} user={user} />
     </div>
   );
