@@ -11,7 +11,7 @@ interface Props {
   isAuthenticated: boolean;
 }
 
-export default function AuthUI({ user, isAuthenticated }: Props) {
+const AuthUI = ({ user, isAuthenticated }: Props) => {
   const [isPending, startTransition] = useTransition();
   const [isClientLoading, setIsClientLoading] = useState(true);
 
@@ -170,4 +170,6 @@ export default function AuthUI({ user, isAuthenticated }: Props) {
       </div>
     </div>
   );
-}
+};
+
+export default AuthUI;

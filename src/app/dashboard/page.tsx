@@ -3,11 +3,7 @@ import DashboardHeader from "@/components/Dashboard/DashboardHeader";
 import ClientDashboardContent from "@/components/Dashboard/DashBoardContent";
 import { createSupabaseServerClient } from "@/lib/supabase";
 
-interface DashboardProps {
-  searchParams: { modal?: string };
-}
-
-export default async function Dashboard({ searchParams }: DashboardProps) {
+const Dashboard = async () => {
   let user: User | null = null;
   let bookmarks: any[] = [];
 
@@ -50,4 +46,6 @@ export default async function Dashboard({ searchParams }: DashboardProps) {
       />
     </div>
   );
-}
+};
+
+export default Dashboard;

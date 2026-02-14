@@ -3,7 +3,7 @@ import AuthUI from "@/components/AuthUI";
 import { createSupabaseServerClient } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
 
-export default async function Home() {
+const Home = async () => {
   let user = null;
   let isAuthenticated = false;
 
@@ -242,4 +242,6 @@ export default async function Home() {
       </footer>
     </main>
   );
-}
+};
+
+export default Home;

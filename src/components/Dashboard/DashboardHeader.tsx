@@ -1,15 +1,15 @@
 "use client";
 
 import { signOut } from "@/actions/auth";
+import { MotionButton, MotionDiv, MotionHeader } from "@/motion/framer_motion";
 import { User } from "@supabase/supabase-js";
-import { motion } from "framer-motion";
 import { useTransition } from "react";
 
-interface DashboardHeaderProps {
+type Props = {
   user: User | null;
-}
+};
 
-export default function DashboardHeader({ user }: DashboardHeaderProps) {
+const DashboardHeader = ({ user }: Props) => {
   const [isPending, startTransition] = useTransition();
 
   const handleSignOut = () => {
@@ -19,7 +19,7 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
   };
 
   return (
-    <motion.header
+    <MotionHeader
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       className="bg-white/80 backdrop-blur-xl sticky top-0 z-50 shadow-lg border-b border-slate-200/50"
@@ -27,7 +27,7 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <motion.div
+          <MotionDiv
             whileHover={{ scale: 1.05 }}
             className="flex items-center gap-3"
           >
@@ -49,39 +49,41 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
             <span className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
               BookmarkHub
             </span>
-          </motion.div>
+          </MotionDiv>
 
           {/* User Menu */}
-          <motion.div
+          <MotionDiv
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             className="flex items-center gap-4"
           >
             <div className="flex items-center gap-3 text-sm text-slate-700">
               <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-semibold text-xs">
-                {user?.email?.[0]?.toUpperCase()}
+                {user?.user_metadata?.full_name?.[0]?.toUpperCase()}
               </div>
               <span className="font-medium truncate max-w-[150px]">
-                {user?.email}
+                {user?.user_metadata?.full_name}
               </span>
             </div>
 
-            <motion.button
+            <MotionButton
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleSignOut}
               disabled={isPending}
-              className="px-6 py-2.5 bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-6 py-2.5 bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               {isPending ? (
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               ) : (
                 "Sign Out"
               )}
-            </motion.button>
-          </motion.div>
+            </MotionButton>
+          </MotionDiv>
         </div>
       </div>
-    </motion.header>
+    </MotionHeader>
   );
-}
+};
+
+export default DashboardHeader;
