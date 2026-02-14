@@ -23,12 +23,15 @@ type Props = {
 export const ClientDashboardContent = ({ userId, user }: Props) => {
   const [search, setSearch] = useState<string>("");
 
+  // just a dummy call to get the total count
   const paginatedData = useGetBookmarksPaginated(userId, search, 1, 9);
+
   const { page, totalPages, goToPage, limit, changeLimit } = usePagination(
     paginatedData.data?.count || 0,
     9,
   );
 
+  // To register channel for real time database
   useBookmarkRealtime(userId);
 
   // const { data: bookmarks = [], isLoading } = useGetBookmarks(userId, search);

@@ -3,10 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { createBrowserSupabaseClient } from "@/lib/supabase-client";
 import { toast } from "sonner";
-import { Database } from "@/types/database";
 import { useEffect } from "react";
-
-type Bookmark = Database["public"]["Tables"]["bookmarks"]["Row"];
 
 // ================================
 // GET BOOKMARKS (Main Query)
