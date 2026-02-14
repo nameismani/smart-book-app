@@ -23,16 +23,17 @@ export const ClientDashboardContent = ({ userId, user }: Props) => {
   return (
     <>
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-y-2 md:gap-y-0">
           {/* LEFT: Count */}
           <MotionDiv
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
+            className="flex flex-row md:flex-col items-center md:items-start md:justify-start justify-between"
           >
-            <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-1">
+            <h1 className=" text-2xl md:text-4xl font-bold text-slate-900 mb-1">
               My Bookmarks
             </h1>
-            <p className="text-lg text-slate-600">
+            <p className="text-sm md:text-lg text-slate-600">
               {bookmarks.length}{" "}
               {bookmarks.length === 1 ? "bookmark" : "bookmarks"} saved
             </p>

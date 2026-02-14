@@ -114,7 +114,7 @@ const AuthUI = ({ user, isAuthenticated }: Props) => {
           <button
             type="submit"
             disabled={isPending}
-            className="w-full cursor-pointer bg-white hover:bg-slate-50 border-2 border-slate-200 hover:border-blue-300 text-slate-700 font-semibold py-4 px-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-center gap-3 group disabled:opacity-50 disabled:cursor-not-allowed disabled:group-hover:shadow-sm"
+            className="w-full cursor-pointer bg-white hover:bg-slate-50 border-2 border-slate-200 hover:border-blue-300 text-slate-700 font-semibold py-4 px-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-center gap-3 group disabled:opacity-50 disabled:cursor-not-allowed disabled:group-hover:shadow-sm "
           >
             {/* Google Icon */}
             <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24">
@@ -153,7 +153,7 @@ const AuthUI = ({ user, isAuthenticated }: Props) => {
         </form>
 
         {/* Benefits */}
-        <div className="space-y-3 pt-4 border-t border-slate-200">
+        <div className="space-y-3 pt-4 ">
           <div className="flex items-center gap-2 text-sm text-slate-600">
             <CheckIcon />
             <span>No credit card required</span>
