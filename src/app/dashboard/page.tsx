@@ -3,6 +3,8 @@ import DashboardHeader from "@/components/Dashboard/DashboardHeader";
 import ClientDashboardContent from "@/components/Dashboard/DashBoardContent";
 import { createSupabaseServerClient } from "@/lib/supabase";
 
+export const dynamic = "force-dynamic";
+
 const Dashboard = async () => {
   let user: User | null = null;
   let bookmarks: any[] = [];

@@ -25,7 +25,7 @@ const DashboardHeader = ({ user }: Props) => {
       className="bg-white/80 backdrop-blur-xl sticky top-0 z-50 shadow-lg border-b border-slate-200/50"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-y-2 md:gap-y-0">
           {/* Logo */}
           <MotionDiv
             whileHover={{ scale: 1.05 }}

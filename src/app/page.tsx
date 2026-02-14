@@ -3,6 +3,8 @@ import AuthUI from "@/components/AuthUI";
 import { createSupabaseServerClient } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
 
+export const dynamic = "force-dynamic";
+
 const Home = async () => {
   let user = null;
   let isAuthenticated = false;
