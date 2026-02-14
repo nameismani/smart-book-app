@@ -36,11 +36,74 @@ export const useGetBookmarks = (userId: string, search: string = "") => {
       return data || [];
     },
     enabled: !!userId,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    // staleTime: 5 * 60 * 1000, // 5 minutes
     meta: { errorTitle: "Error fetching bookmarks" },
   });
 };
 
+export const useGetBookmarksPaginated = (
+  userId: string,
+  search: string = "",
+  page: number = 1,
+  limit: number = 9,
+) => {
+  const supabase = createBrowserSupabaseClient();
+
+  return useQuery({
+    queryKey: [
+      "bookmarks-paginated",
+      userId,
+      search,
+      "page",
+      page,
+      "limit",
+      limit,
+    ],
+    queryFn: async () => {
+      if (!userId) return { data: [], count: 0 };
+
+      // First get total count
+      let countQuery = supabase
+        .from("bookmarks")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", userId);
+
+      if (search.trim()) {
+        const searchQuery = `%${search.trim()}%`;
+        countQuery = countQuery.or(
+          `title.ilike.${searchQuery},url.ilike.${searchQuery}`,
+        );
+      }
+
+      const { count } = await countQuery;
+
+      // Then get paginated data
+      let dataQuery = supabase
+        .from("bookmarks")
+        .select("*")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false })
+        .range((page - 1) * limit, page * limit - 1);
+
+      if (search.trim()) {
+        const searchQuery = `%${search.trim()}%`;
+        dataQuery = dataQuery.or(
+          `title.ilike.${searchQuery},url.ilike.${searchQuery}`,
+        );
+      }
+
+      const { data, error } = await dataQuery;
+      if (error) throw error;
+
+      return {
+        data: data || [],
+        count: count || 0,
+      };
+    },
+    enabled: !!userId,
+    // staleTime: 5 * 60 * 1000,
+  });
+};
 // Realtime subscription hook (separate)
 export const useBookmarkRealtime = (userId: string) => {
   const queryClient = useQueryClient();
@@ -64,6 +127,10 @@ export const useBookmarkRealtime = (userId: string) => {
           // console.log("Live trigger");
           queryClient.invalidateQueries({
             queryKey: ["bookmarks", userId],
+            exact: false,
+          });
+          queryClient.invalidateQueries({
+            queryKey: ["bookmarks-paginated", userId],
             exact: false,
           });
         },
@@ -106,6 +173,10 @@ export const useCreateBookmark = (userId: string) => {
         queryKey: ["bookmarks", userId],
         exact: false,
       });
+      queryClient.invalidateQueries({
+        queryKey: ["bookmarks-paginated", userId],
+        exact: false,
+      });
     },
     onError: (error: any) => {
       toast.error(error.message || "Failed to create bookmark");
@@ -145,6 +216,10 @@ export const useUpdateBookmark = (userId: string) => {
         queryKey: ["bookmarks", userId],
         exact: false,
       });
+      queryClient.invalidateQueries({
+        queryKey: ["bookmarks-paginated", userId],
+        exact: false,
+      });
     },
     onError: (error: any) => {
       toast.error(error.message || "Failed to update bookmark");
@@ -174,6 +249,10 @@ export const useDeleteBookmark = (userId: string) => {
       toast.success("Bookmark deleted successfully!");
       queryClient.invalidateQueries({
         queryKey: ["bookmarks", userId],
+        exact: false,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["bookmarks-paginated", userId],
         exact: false,
       });
     },

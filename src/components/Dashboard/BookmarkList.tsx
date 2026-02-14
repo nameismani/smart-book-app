@@ -2,7 +2,11 @@
 
 import { MotionAnimatePresence, MotionDiv } from "@/motion/framer_motion";
 import BookmarkDialog from "../dialog/BookmarkDialog";
-import { useGetBookmarks, useDeleteBookmark } from "@/hooks/useBookmarkApi";
+import {
+  useGetBookmarks,
+  useDeleteBookmark,
+  useGetBookmarksPaginated,
+} from "@/hooks/useBookmarkApi";
 import Link from "next/link";
 import { EditIcon, ExternalLink, Trash2 } from "lucide-react";
 import { BookMarkSkeleton, EmptyBookmark } from "./BookMarkAddon";
@@ -15,10 +19,19 @@ import { tBookMark } from "@/types/bookmark.type";
 type Props = {
   userId: string;
   search: string;
+  page: number;
+  limit: number;
 };
 
-const BookmarkList = ({ userId, search }: Props) => {
-  const { data: bookmarks = [], isLoading } = useGetBookmarks(userId, search);
+const BookmarkList = ({ userId, search, page, limit }: Props) => {
+  // const { data: bookmarks = [], isLoading } = useGetBookmarks(userId, search);
+  const { data, isLoading } = useGetBookmarksPaginated(
+    userId,
+    search,
+    page,
+    limit,
+  );
+  const bookmarks = data?.data || [];
   const { mutateAsync: deleteBookmark, isPending: isDeleting } =
     useDeleteBookmark(userId);
 
@@ -54,7 +67,7 @@ const BookmarkList = ({ userId, search }: Props) => {
           exit={{ opacity: 0, scale: 0.9 }}
           transition={{ duration: 0.3, delay: index * 0.05 }}
           whileHover={{ y: -4 }}
-          className="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl border border-slate-200 transition-all duration-300"
+          className="bg-white rounded-2xl h-fit p-6 shadow-md hover:shadow-xl border border-slate-200 transition-all duration-300"
         >
           <div className="space-y-4">
             <h3 className="font-bold text-slate-900 text-lg line-clamp-2 leading-tight">

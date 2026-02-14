@@ -5,9 +5,15 @@ import { useMemo, useState } from "react";
 import { MotionDiv } from "@/motion/framer_motion";
 import BookmarkList from "./BookmarkList";
 import BookmarkDialog from "../dialog/BookmarkDialog";
-import { useBookmarkRealtime, useGetBookmarks } from "@/hooks/useBookmarkApi";
+import {
+  useBookmarkRealtime,
+  useGetBookmarks,
+  useGetBookmarksPaginated,
+} from "@/hooks/useBookmarkApi";
 import { debounce } from "@tanstack/react-pacer";
 import { Plus, Search, X } from "lucide-react";
+import { usePagination } from "@/hooks/usePagination";
+import { PaginationControls } from "../common/Pagination";
 
 type Props = {
   userId: string;
@@ -17,9 +23,24 @@ type Props = {
 export const ClientDashboardContent = ({ userId, user }: Props) => {
   const [search, setSearch] = useState<string>("");
 
+  const paginatedData = useGetBookmarksPaginated(userId, search, 1, 9);
+  const { page, totalPages, goToPage, limit, changeLimit } = usePagination(
+    paginatedData.data?.count || 0,
+    9,
+  );
+
   useBookmarkRealtime(userId);
 
-  const { data: bookmarks = [], isLoading } = useGetBookmarks(userId, search);
+  // const { data: bookmarks = [], isLoading } = useGetBookmarks(userId, search);
+  const { data, isLoading } = useGetBookmarksPaginated(
+    userId,
+    search,
+    page,
+    limit,
+  );
+
+  const bookmarks = data?.data || [];
+  const totalCount = data?.count || 0;
 
   // const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
   //   setSearch(e.target.value);
@@ -34,6 +55,7 @@ export const ClientDashboardContent = ({ userId, user }: Props) => {
       debounce(
         (term: string) => {
           setSearch(term);
+          goToPage(1);
         },
         { wait: 500 },
       ),
@@ -46,7 +68,7 @@ export const ClientDashboardContent = ({ userId, user }: Props) => {
 
   return (
     <>
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl min-h-[89dvh] mx-auto px-4 sm:px-6 lg:px-8 py-8 grid grid-rows-[auto_auto_1fr_auto]">
         {/* 🔍 SEARCH BAR */}
         <div className="mb-8">
           <div className="relative">
@@ -87,8 +109,7 @@ export const ClientDashboardContent = ({ userId, user }: Props) => {
               My Bookmarks
             </h1>
             <p className="text-sm md:text-lg text-slate-600">
-              {bookmarks.length}{" "}
-              {bookmarks.length === 1 ? "bookmark" : "bookmarks"} saved
+              {totalCount} {totalCount === 1 ? "bookmark" : "bookmarks"} saved
             </p>
           </MotionDiv>
 
@@ -107,8 +128,27 @@ export const ClientDashboardContent = ({ userId, user }: Props) => {
 
         {/* 📋 BOOKMARKS LIST */}
         {user ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <BookmarkList userId={userId} search={search} />
+          <div className="grid grid-rows-[1fr_auto]">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <BookmarkList
+                userId={userId}
+                search={search}
+                page={page}
+                limit={limit}
+              />
+            </div>
+            {totalPages > 1 && (
+              <PaginationControls
+                currentPage={page}
+                totalPages={totalPages}
+                totalCount={totalCount}
+                itemsPerPage={limit}
+                onPageChange={goToPage}
+                onLimitChange={changeLimit}
+                // onResetSearch={handleClearSearch}
+                className="mt-5"
+              />
+            )}
           </div>
         ) : (
           <div className="text-center py-20">
