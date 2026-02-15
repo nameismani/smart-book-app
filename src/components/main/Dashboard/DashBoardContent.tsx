@@ -63,7 +63,7 @@ export const DashboardContent = ({ userId, user }: Props) => {
       debounce(
         (term: string) => {
           setSearch(term);
-          goToPage(1);
+          goToPage(0);
         },
         { wait: 500 },
       ),
