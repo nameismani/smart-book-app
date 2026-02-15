@@ -3,7 +3,7 @@
 import { useEffect, useState, useTransition } from "react";
 import { signInWithGoogle } from "@/actions/auth";
 import Link from "next/link";
-import CheckIcon from "@/assets/CheckIcon";
+import { CheckIcon } from "@/assets";
 import { User } from "@supabase/supabase-js";
 
 interface Props {

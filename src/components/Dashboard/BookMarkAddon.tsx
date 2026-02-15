@@ -1,6 +1,6 @@
 "use client";
 
-import EmptyBookmarkIcon from "@/assets/EmptyBookmarkIcon";
+import { EmptyBookmarkIcon } from "@/assets";
 import { MotionDiv } from "@/motion/framer_motion";
 
 export const EmptyBookmark = () => {

@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { createBrowserSupabaseClient } from "@/lib/supabase-client";
 import { toast } from "sonner";
 import { useEffect } from "react";
+import { User } from "@supabase/supabase-js";
 
 // ================================
 // GET BOOKMARKS (Main Query)
@@ -268,6 +269,8 @@ export const useAuthUser = () => {
       const { data } = await supabase.auth.getUser();
       return data.user;
     },
-    staleTime: 5 * 60 * 1000,
+    // staleTime: 5 * 60 * 1000,
+    // gcTime: 10 * 60 * 1000, // 10min garbage collection
+    // retry: false, // Don't retry auth
   });
 };
