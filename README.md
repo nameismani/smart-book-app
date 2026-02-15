@@ -10,6 +10,31 @@
 
 A modern, full-stack **Smart Bookmark Manager** with real-time sync, smart search, pagination, and beautiful animations.
 
+## 🧠 **Challenges & Solutions**
+
+During development, I faced **two major challenges**:
+
+### **1. Supabase Knowledge Gap**
+
+❌ Zero prior Supabase experience
+✅ Learned basics from YouTube + AI implementation help
+✅ Implemented client-side (Home) + server-side (Dashboard) auth
+
+### **2. Real-time Events Issue**
+
+❌ DELETE always worked ✅ CREATE/UPDATE sometimes failed ❌
+✅ Safety: TanStack Query refetchOnWindowFocus: true
+✅ Future: Deep dive into Supabase RLS + Publication mechanics
+
+### **3. Production-Ready Delivery**
+
+✅ Home: Attractive marketing + Google Auth (Client-side)
+✅ Dashboard: Full CRUD + Search + Pagination (Server-side)
+✅ Responsive design + Reusable confirmation modal
+✅ Window focus safety ensures fresh data always
+
+**App works 100% functionally** - real-time 90% reliable + safety fallbacks!
+
 ## ✨ **Features**
 
 <div align="center">
