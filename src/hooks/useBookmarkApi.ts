@@ -135,6 +135,16 @@ export const useBookmarkRealtime = (userId: string) => {
       )
       .subscribe((status) => {
         console.log("Realtime status:", status);
+        // console.log("✅ Channel connected:", {
+        //   topic: channel.topic, // "bookmarks-realtime-abc123"
+        //   state: channel.state, // "joining", "joined", "closing", "closed"
+        //   userId,
+        //   status,
+        // });
+
+        // if (status === "SUBSCRIBED") {
+        //   console.log("🎉 Realtime READY:", channel.topic);
+        // }
       });
 
     return () => {
