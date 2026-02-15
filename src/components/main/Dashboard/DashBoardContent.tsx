@@ -27,10 +27,8 @@ export const DashboardContent = ({ userId, user }: Props) => {
   // just a dummy call to get the total count
   const paginatedData = useGetBookmarksPaginated(userId, search, 1, 9);
 
-  const { page, totalPages, goToPage, limit, changeLimit } = usePagination(
-    paginatedData.data?.count || 0,
-    9,
-  );
+  const { page, totalPages, goToPage, limit, changeLimit, reset } =
+    usePagination(paginatedData.data?.count || 0, 9);
 
   // To register channel for real time database
   useBookmarkRealtime(userId);
@@ -52,6 +50,7 @@ export const DashboardContent = ({ userId, user }: Props) => {
 
   const handleClearSearch = () => {
     setSearch("");
+    reset();
     if (searchRef.current) {
       searchRef.current.value = "";
       searchRef.current.focus();
@@ -63,7 +62,7 @@ export const DashboardContent = ({ userId, user }: Props) => {
       debounce(
         (term: string) => {
           setSearch(term);
-          goToPage(0);
+          reset();
         },
         { wait: 500 },
       ),
