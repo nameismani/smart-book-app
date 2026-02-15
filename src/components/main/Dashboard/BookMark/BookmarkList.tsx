@@ -1,7 +1,6 @@
 "use client";
 
 import { MotionAnimatePresence, MotionDiv } from "@/motion/framer_motion";
-import BookmarkDialog from "../dialog/BookmarkDialog";
 import {
   useGetBookmarks,
   useDeleteBookmark,
@@ -9,12 +8,14 @@ import {
 } from "@/hooks/useBookmarkApi";
 import Link from "next/link";
 import { EditIcon, ExternalLink, Trash2 } from "lucide-react";
-import { BookMarkSkeleton, EmptyBookmark } from "./BookMarkAddon";
-import { useRef } from "react";
-import ConfirmationModal, {
-  ConfirmationModalRef,
-} from "../dialog/ConfirmationModal";
+import {
+  BookMarkSkeleton,
+  EmptyBookmark,
+} from "@/components/main/Dashboard/BookMark";
 import { tBookMark } from "@/types/bookmark.type";
+import { useRef } from "react";
+import { BookmarkDialog, ConfirmationModal } from "@/components/main/dialog";
+import { ConfirmationModalRef } from "../../dialog/ConfirmationModal";
 
 type Props = {
   userId: string;

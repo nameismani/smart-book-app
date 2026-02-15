@@ -9,9 +9,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
+import { BookmarkForm } from "@/components/main/Dashboard/BookMark";
 import { tBookMark } from "@/types/bookmark.type";
-import BookmarkForm from "../Dashboard/BookMarkForm";
 
 type Props = {
   children: React.ReactNode;

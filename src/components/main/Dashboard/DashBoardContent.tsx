@@ -1,9 +1,9 @@
 "use client";
 
 import { User } from "@supabase/supabase-js";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { MotionDiv } from "@/motion/framer_motion";
-import BookmarkList from "./BookmarkList";
+import BookmarkList from "./BookMark/BookmarkList";
 import BookmarkDialog from "../dialog/BookmarkDialog";
 import {
   useBookmarkRealtime,
@@ -13,15 +13,16 @@ import {
 import { debounce } from "@tanstack/react-pacer";
 import { Plus, Search, X } from "lucide-react";
 import { usePagination } from "@/hooks/usePagination";
-import { PaginationControls } from "../common/Pagination";
+import { PaginationControls } from "@/components/common";
 
 type Props = {
   userId: string;
   user: User | null;
 };
 
-export const ClientDashboardContent = ({ userId, user }: Props) => {
+export const DashboardContent = ({ userId, user }: Props) => {
   const [search, setSearch] = useState<string>("");
+  const searchRef = useRef<HTMLInputElement>(null);
 
   // just a dummy call to get the total count
   const paginatedData = useGetBookmarksPaginated(userId, search, 1, 9);
@@ -51,6 +52,10 @@ export const ClientDashboardContent = ({ userId, user }: Props) => {
 
   const handleClearSearch = () => {
     setSearch("");
+    if (searchRef.current) {
+      searchRef.current.value = "";
+      searchRef.current.focus();
+    }
   };
 
   const debouncedSetSearch = useMemo(
@@ -78,6 +83,7 @@ export const ClientDashboardContent = ({ userId, user }: Props) => {
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
             <input
               type="text"
+              ref={searchRef}
               placeholder="Search bookmarks by title or URL..."
               onChange={(e) => {
                 debouncedSetSearch(e.target.value);
@@ -87,7 +93,7 @@ export const ClientDashboardContent = ({ userId, user }: Props) => {
             {search && (
               <button
                 onClick={handleClearSearch}
-                className="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-slate-100 rounded-full transition-colors"
+                className="absolute active:scale-[0.98] cursor-pointer right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-slate-100 rounded-full transition-colors"
               >
                 <X className="h-4 w-4 text-slate-400 hover:text-slate-600" />
               </button>
@@ -165,4 +171,4 @@ export const ClientDashboardContent = ({ userId, user }: Props) => {
   );
 };
 
-export default ClientDashboardContent;
+export default DashboardContent;

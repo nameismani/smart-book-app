@@ -1,5 +1,5 @@
 import TickIcon from "@/assets/TickIcon";
-import React from "react";
+import { FEATURES } from "@/constants/marketing.constant";
 
 const HomeMarketing = () => {
   return (
@@ -40,41 +40,20 @@ const HomeMarketing = () => {
 
       {/* Feature List */}
       <div className="space-y-4 mb-8">
-        <div className="flex items-start gap-3 justify-center lg:justify-start">
-          <div className="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
-            <TickIcon />
+        {FEATURES.map(({ title, description }, index) => (
+          <div
+            key={index}
+            className="flex items-start gap-3 justify-center lg:justify-start"
+          >
+            <div className="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
+              <TickIcon />
+            </div>
+            <div className="text-left">
+              <h3 className="font-semibold text-slate-900">{title}</h3>
+              <p className="text-slate-600 text-sm">{description}</p>
+            </div>
           </div>
-          <div className="text-left">
-            <h3 className="font-semibold text-slate-900">Smart Organization</h3>
-            <p className="text-slate-600 text-sm">
-              Automatically categorize and tag your bookmarks for easy retrieval
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-start gap-3 justify-center lg:justify-start">
-          <div className="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
-            <TickIcon />
-          </div>
-          <div className="text-left">
-            <h3 className="font-semibold text-slate-900">Lightning Search</h3>
-            <p className="text-slate-600 text-sm">
-              Find any bookmark in seconds with powerful search and filters
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-start gap-3 justify-center lg:justify-start">
-          <div className="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
-            <TickIcon />
-          </div>
-          <div className="text-left">
-            <h3 className="font-semibold text-slate-900">Access Anywhere</h3>
-            <p className="text-slate-600 text-sm">
-              Sync across all your devices - desktop, tablet, and mobile
-            </p>
-          </div>
-        </div>
+        ))}
       </div>
 
       {/* Social Proof */}

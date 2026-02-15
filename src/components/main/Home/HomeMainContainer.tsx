@@ -1,7 +1,6 @@
 "use client";
 
-import AuthUI from "@/components/AuthUI";
-import { HomeMarketing, HomeWhyChoose } from "@/components/main/Home";
+import { HomeMarketing, HomeWhyChoose, AuthUI } from "@/components/main/Home";
 import { useAuthUser } from "@/hooks/useBookmarkApi";
 import { User } from "@supabase/supabase-js";
 
@@ -37,6 +36,7 @@ const HomeMainContainer = () => {
 
       <HomeWhyChoose />
 
+      {/* Footer */}
       <footer className="bg-white border-t border-slate-200 py-8">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center text-sm text-slate-600">
