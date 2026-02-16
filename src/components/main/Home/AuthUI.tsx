@@ -99,7 +99,7 @@ const AuthUI = ({ user, isAuthenticated }: Props) => {
         </div>
 
         {/* Sign In Button */}
-        <form action={signInWithGoogle} onClick={handleSignIn}>
+        <form onClick={handleSignIn}>
           <button
             type="submit"
             disabled={isPending}
