@@ -6,7 +6,7 @@
   <img src="https://github.com/yourusername/smart-bookmark-app/assets/12345678/screenshot.png" alt="Screenshot" width="800"/>
 </div> -->
 
-**Live Demo**: [https://smart-bookmark-app.vercel.app](https://smart-bookmark-app.vercel.app)
+**Live Demo**: [https://nameismani-smart-book-app.vercel.app](https://nameismani-smart-book-app.vercel.app)
 
 A modern, full-stack **Smart Bookmark Manager** with real-time sync, smart search, pagination, and beautiful animations.
 
